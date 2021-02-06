@@ -15,9 +15,14 @@ os.system("cls")
 #Please don't sell my work either. It took ages and to give the source code out for free is kind, making money off my free work is just wrong
 #This took lots of hours to work on. Signing up to github takes about 3 minutes max, starring my post  - https://github.com/scalic/scalic-selfbot - takes 5 seconds. If you wouldn't mind pressing the star I'd really appreciate it!
 #Have fun :)
-with open("settings.txt") as setup:
-    setup = setup.readlines()
+try:
+    with open("settings.txt") as setup:
+        setup = setup.readlines()
 
+except Exception as error:
+    print(f" | Did you extract me properly? Did you delete/rename settings.txt? I can't access it\n | Error : {error}")
+    time.sleep(10)
+    os._exit(0)
 
 token = setup[0].replace('"',"").replace("TOKEN=","") #Removing the "" helps - some users will get their token from local storage which will lead to this I also know some people would probably delete the bit that says TOKEN= so did a foolproof way :)
 #print(token)
@@ -53,8 +58,14 @@ else:
     time.sleep(5)
     os._exit(0)
 
-color = setup[2].replace('"',"").replace("COLOR=","")
-prefix = setup[1].replace('"',"").replace("PREFIX=","") #just in case users put the prefix in " "
+prefix = setup[1].replace('"',"").replace("PREFIX=","") #just in case users put the details in " "
+editing = setup[2].replace('"',"").replace("EDIT=","")
+deletedmessagelogging = setup[3].replace('"',"").replace("DELETED-MESSAGE-LOGGER=","")
+editedmessagelogging = setup[4].replace('"',"").replace("EDITED-MESSAGE-LOGGER=","")
+statusofediting = editing.strip().lower()
+deletedmessagelogger = deletedmessagelogging.strip().lower()
+editedmessagelogger = editedmessagelogging.strip().lower()
+
 scalic = commands.Bot(prefix.strip(), self_bot=True)
 scalic.remove_command("help") #this lets me add my own custom help cmd, rather then the ugly default one
 
@@ -128,6 +139,24 @@ async def embed(ctx,*,mesg=f"Format : {prefix.strip()}embed [words]"):
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
     await ctx.message.edit(content="",embed=embed)
 
+
+@scalic.command(aliases=['deletechans', 'deleteallchannels'])
+async def deletechannels(ctx):
+    await ctx.message.delete()
+    for chan in guild.channels:
+        try:
+            await chan.delete()
+        except:
+            pass
+
+@scalic.command(aliases=['deleterolls', 'deleteallroles'])
+async def deleteroles(ctx):
+    await ctx.message.delete()
+    for role in list(ctx.guild.roles):
+        try:
+            await role.delete()
+        except:
+            pass
 
 
 
@@ -330,7 +359,59 @@ async def spamedit(ctx, count=None,*, mesg=None):
         embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
         await msg.edit(embed=embed,delete_after=3)
 
-statusofediting = "off"
+
+
+@scalic.command(aliases=['deletedmessagelogger', 'deletedmessageslogger'])
+async def logdeletedmessages(ctx,deletestatus=None):
+    global deletedmessagelogger 
+    if deletestatus == None:
+        if deletedmessagelogger == "off":
+            deletedmessagelogger = "on"
+        elif deletedmessagelogger == "on":
+            deletedmessagelogger = "off"
+    else:
+        if deletestatus.lower() == "off":
+            deletedmessagelogger = "off"
+        if deletestatus.lower() == "on":
+            deletedmessagelogger = "on"
+
+        if deletestatus.lower() == "true": #could i of made the code shorter : yes ... but i like it this way, more clearer to scroll past
+            deletedmessagelogger = "on"
+        if deletestatus.lower() == "false":
+            deletedmessagelogger = "off"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Deleted message logger", description=f"Deleted message logger is now : `{deletedmessagelogger}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+@scalic.command(aliases=['editedmessagelogger', 'editedmessageslogger'])
+async def logediteddmessages(ctx,editstatus=None):
+    global editedmessagelogger 
+    if editstatus == None:
+        if editedmessagelogger == "off":
+            editedmessagelogger = "on"
+        elif editedmessagelogger == "on":
+            editedmessagelogger = "off"
+    else:
+        if editstatus.lower() == "off":
+            editedmessagelogger = "off"
+        if editstatus.lower() == "on":
+            editedmessagelogger = "on"
+
+        if editstatus.lower() == "true": #could i of made the code shorter : yes ... but i like it this way, more clearer to scroll past
+            editedmessagelogger = "on"
+        if editstatus.lower() == "false":
+            editedmessagelogger = "off"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Deleted message logger", description=f"Deleted message logger is now : `{editedmessagelogger}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+
 @scalic.command(aliases=['editmode', 'editall'])
 async def edit(ctx,editstatus=None):
     global statusofediting 
@@ -392,7 +473,33 @@ async def on_message(ctx):
                 pass
     await scalic.process_commands(ctx)
 
+@scalic.event
+async def on_message_delete(ctx):
+    global deletedmessagelogger
+    if deletedmessagelogger == "on":
+        if ctx.guild == None:
+            if ctx.author.id != scalic.user.id:
+                try:
+                    await ctx.channel.send(f"**Message logged by {ctx.author.mention} : ** \n{ctx.content}")
+                except:
+                    pass
+    await scalic.process_commands(ctx)
 
+@scalic.event
+async def on_message_edit(before,after):
+    global editedmessagelogger
+    if editedmessagelogger == "on":
+        if after.guild == None:
+            if after.author.id != scalic.user.id:
+                try:
+                    await after.channel.send(f"**Message edited by {after.author.mention} : ** \n**Before : **{before.content}\n**After : **{after.content}")
+                except Exception as h:
+                    print(h)
+    await scalic.process_commands(after)
+
+
+
+    
 
 
 
@@ -465,7 +572,10 @@ async def deepfry(ctx,  memb : discord.Member=None):
     data = requests.get(f"https://nekobot.xyz/api/imagegen?type=deepfry&image={finalurl}").text
     j = json.loads(data)
     deepfri = j['message']
-    await ctx.message.edit(content=deepfri)
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(color=randcolor)
+    embed.set_image(url=deepfri)
+    await ctx.message.edit(content="",embed=embed)
 
 @scalic.command()
 async def blurpify(ctx,  memb : discord.Member=None):
@@ -476,7 +586,10 @@ async def blurpify(ctx,  memb : discord.Member=None):
     data = requests.get(f"https://nekobot.xyz/api/imagegen?type=blurpify&image={finalurl}").text
     j = json.loads(data)
     blurple = j['message']
-    await ctx.message.edit(content=blurple)
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(color=randcolor)
+    embed.set_image(url=blurple)
+    await ctx.message.edit(content="",embed=embed)
 
 @scalic.command(aliases=['magicify',"magikify"])
 async def magic(ctx,  memb : discord.Member=None,intense="5"):
@@ -485,10 +598,14 @@ async def magic(ctx,  memb : discord.Member=None,intense="5"):
 
     finalurl = str(memb.avatar_url)
     finalurl = finalurl.replace("gif","png")
+    finalurl = finalurl.replace("webp","png")
     data = requests.get(f"https://nekobot.xyz/api/imagegen?type=magik&image={finalurl}&intensity={intense}").text
     j = json.loads(data)
     magicwoah = j['message']
-    await ctx.message.edit(content=magicwoah)
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(color=randcolor)
+    embed.set_image(url=magicwoah)
+    await ctx.message.edit(content="",embed=embed)
 
 
     
