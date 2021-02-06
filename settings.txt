@@ -1,0 +1,2 @@
+TOKEN=my-token-needs-to-be-here
+PREFIX=!
