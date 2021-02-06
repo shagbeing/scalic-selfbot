@@ -1,0 +1,2 @@
+Needed to put a file in this folder so putting this in it.
+The data folder will be used when downloading items like emojis , just ignore it
