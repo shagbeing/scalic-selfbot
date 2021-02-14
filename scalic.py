@@ -25,6 +25,8 @@ os.system("title Scalic Selfbot - Please remember to star it - it took hours and
 #Please don't sell my work either. It took ages and to give the source code out for free is kind, making money off my free work is just wrong
 #This took lots of hours to work on. Signing up to github takes about 3 minutes max, starring my post  - https://github.com/scalic/scalic-selfbot - takes 5 seconds. If you wouldn't mind pressing the star I'd really appreciate it!
 #Have fun :)
+
+#Also to do - if lots of people get "member not found errors", get the member for each line of code (just time consuming adding it)
 try:
     with open("settings.txt") as setup:
         setup = setup.readlines()
@@ -80,7 +82,9 @@ deleteaftertime = setup[10].replace('"',"").replace("DELETE-AFTER-TIME=","")
 delaybetweencycle = setup[11].replace('"',"").replace("CYCLEDELAY=","")
 statusdata = setup[12].replace('"',"").replace("STATUSCYCLE=","")
 streamurl = setup[13].replace('"',"").replace("STREAMURL=","")
-
+delaybetweennicknamecycle = setup[14].replace('"',"").replace("NICKNAMECYCLEDELAY=","")
+nicknamedata = setup[15].replace('"',"").replace("NICKNAMECYCLE=","")
+talkingcuteyems = setup[16].replace('"',"").replace("TALKCUTE=","")
 
 statusofediting = editing.strip().lower()
 deletedmessagelogger = deletedmessagelogging.strip().lower()
@@ -95,11 +99,17 @@ delaybetweencycle = delaybetweencycle.strip()
 statusdata = statusdata.strip()
 statusdata = statusdata.split(",")
 
+delaybetweennicknamecycle = delaybetweennicknamecycle.strip()
+nicknamedata = nicknamedata.strip()
+nicknamedata = nicknamedata.split(",")
+
 deleteafter = deleteafter.strip().lower()
 deleteaftertime = deleteaftertime.strip().lower()
 
+talkingcuteyems = talkingcuteyems.strip().lower()
+
 scalic = commands.Bot(prefix.strip(), self_bot=True)
-scalic.remove_command("help") #this lets me add my own custom help cmd, rather then the ugly default one
+#scalic.remove_command("help") #this lets me add my own custom help cmd, rather then the ugly default one
 
 editedmessages ={}
 
@@ -123,6 +133,10 @@ spinner.start()
 
 #Deleted message sniper - just a reminder of the cmd for me for once I find out why edit sniping is broken
 
+
+#avatar download (just havent got round to it - shouldnt have any problems xd)
+
+#tiktok cmd to type !tiktok [url] - it then sends video source - adds a reaction and when the user REMOVES that reaction (aka clicks it) itll download it - lemme know if u can help with this
 
 commandsdone = 0
 messagessent = 0
@@ -184,7 +198,7 @@ def screen():
         time.sleep(1)
         os.system("cls")
 
-@scalic.command(aliases=["timerunning"])
+@scalic.command(aliases=["timerunning","elapsed"])
 async def uptime(ctx):
     global starttime
     currenttime = time.time()
@@ -229,6 +243,50 @@ async def watchcycle(ctx):
         for watchstatus in statusdata:
             await scalic.change_presence(activity=discord.Activity(type=discord.ActivityType.watching, name=watchstatus))
             await asyncio.sleep(int(delaybetweencycle)) 
+
+@scalic.command(aliases=["nickcycle","cyclenick","cyclenickname","cyclenicknames","nicknamescycle","nicknames","nickname"])
+async def nicknamecycle(ctx,statustocycle=None):
+    global nicknamedata
+    global nicknamestuffyes
+    global delaybetweennicknamecycle
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    if statustocycle == None or statustocycle.lower() == "yes" or statustocycle.lower() == "on":
+        nicknamestuffyes = "on"
+        
+        embed=discord.Embed(title="Scalic Selfbot - Nickname Cycle", description=f"Cycling these statuses:\n`{nicknamedata}`\nDelay:\n`{delaybetweennicknamecycle}`\nCycle status : `{nicknamestuffyes}`\n{prefix.strip()}nicknamecycle off **to stop the cycle**", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+        while nicknamestuffyes == "on":
+            for nick in nicknamedata:
+                await ctx.message.author.edit(nick=nick)     
+                await asyncio.sleep(int(delaybetweennicknamecycle)) 
+
+    else:
+        nicknamestuffyes = "off"
+        embed=discord.Embed(title="Scalic Selfbot - Nickname Cycle", description=f"Cycle status : `{nicknamestuffyes}`\n{prefix.strip()}nicknamecycle **to start the cycle**", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+
+
+@scalic.command(aliases=["nickdelay","nicknamedelay","delaynicks","delaynick","delaynicknames","addnicknamedelay","changenicknamedelay"])
+async def nicknamecycledelay(ctx,newdelay="5"):
+    global delaybetweennicknamecycle
+    delaybetweennicknamecycle = int(newdelay)
+    embed=discord.Embed(title="Scalic Selfbot - Nickname Delay", description=f"Delay is now : `{delaybetweennicknamecycle} seconds`\n{prefix.strip()}nicknamecycle", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+@scalic.command(aliases=["statusdelay","watchdelay","gamedelay","twitchdelay","listendelay","adddelay","addstatusdelay"])
+async def cycledelay(ctx,newdelay="5"):
+    global delaybetweencycle
+    delaybetweencycle = int(newdelay)
+    embed=discord.Embed(title="Scalic Selfbot - Cycle Delay", description=f"Delay is now : `{delaybetweencycle} seconds", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
 
 @scalic.command(aliases=["cyclelisten","cyclelisteningstatus","listenstatuscycle","cyclelistenstatus","cyclelistening","listeningcycle"])
 async def listencycle(ctx):
@@ -971,6 +1029,31 @@ async def edit(ctx,editstatus=None):
     embed=discord.Embed(title="Scalic Selfbot - Edit mode", description=f"Edit mode is now : `{statusofediting}`", color=randcolor)
     embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)#
+
+@scalic.command(aliases=['harotalk', 'talkharo',"haro","cutetalk"])
+async def talkcute(ctx,talkcuteyems=None):
+    global talkingcuteyems 
+    if talkcuteyems == None:
+        if talkingcuteyems == "off":
+            talkingcuteyems = "on"
+        elif talkingcuteyems == "on":
+            talkingcuteyems = "off"
+    else:
+        if talkcuteyems.lower() == "off":
+            talkingcuteyems = "off"
+        if talkcuteyems.lower() == "on":
+            talkingcuteyems = "on"
+
+        if talkcuteyems.lower() == "true":
+            talkingcuteyems = "on"
+        if talkcuteyems.lower() == "false":
+            talkingcuteyems = "off"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Cute talk", description=f"Edit mode is now : `{talkingcuteyems}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
     await ctx.message.edit(content="",embed=embed)
 
 @scalic.command(aliases=['nitrosniper', 'snipenitro'])
@@ -1204,57 +1287,65 @@ async def on_message(ctx):
     global whotomimic
     global commandsdone
     global messagessent
-
+    global talkingcuteyems
 
 
     if nitrosniping == "on":
-        if 'discord.gift' in ctx.content: 
-            nitrotext = open("Log/nitrolog.txt","a") 
-            code = re.search("discord.gift/(.*)", ctx.content).group(1)
-
-            try:
-                nitrotext.write(f"[!] Nitro Found! // Server: {ctx.guild.name} // Channel: {ctx.channel.name} // Sent By: {ctx.author.name}#{ctx.author.discriminator}\n")
-            except:
-                nitrotext.write(f"[!] Nitro Found! Sent By: {ctx.author.name}#{ctx.author.discriminator}\n")
-            if len(code) == 24 or len(code) == 16:
-                result = requests.post('https://discordapp.com/api/v6/entitlements/gift-codes/'+code+'/redeem', json={"channel_id":str(ctx.channel.id)}, headers={'authorization':token.strip()}).text
+        try:
+            if 'discord.gift' in ctx.content: 
+                nitrotext = open("Log/nitrolog.txt","a") 
                 code = re.search("discord.gift/(.*)", ctx.content).group(1)
 
-                if 'this gift has been redeemed already.' in result.lower():
-                    nitrotext.write(f"[-] discord.gift/{code} Has already been claimed\n")
-                elif 'nitro' in result.lower():
-                    nitrotext.write(f"[+] discord.gift/{code} WAS SNIPED!!!\n")
-                elif 'unknown gift code' in result.lower():
-                    nitrotext.write(f"[-] discord.gift/{code} Was an invalid code\n")
-            else:
-                nitrotext.write(f"[-] discord.gift/{code} Was a fake code\n") 
-            nitrotext.close()
+                try:
+                    nitrotext.write(f"[!] Nitro Found! // Server: {ctx.guild.name} // Channel: {ctx.channel.name} // Sent By: {ctx.author.name}#{ctx.author.discriminator}\n")
+                except:
+                    nitrotext.write(f"[!] Nitro Found! Sent By: {ctx.author.name}#{ctx.author.discriminator}\n")
+                if len(code) == 24 or len(code) == 16:
+                    result = requests.post('https://discordapp.com/api/v6/entitlements/gift-codes/'+code+'/redeem', json={"channel_id":str(ctx.channel.id)}, headers={'authorization':token.strip()}).text
+                    code = re.search("discord.gift/(.*)", ctx.content).group(1)
+
+                    if 'this gift has been redeemed already.' in result.lower():
+                        nitrotext.write(f"[-] discord.gift/{code} Has already been claimed\n")
+                    elif 'nitro' in result.lower():
+                        nitrotext.write(f"[+] discord.gift/{code} WAS SNIPED!!!\n")
+                    elif 'unknown gift code' in result.lower():
+                        nitrotext.write(f"[-] discord.gift/{code} Was an invalid code\n")
+                else:
+                    nitrotext.write(f"[-] discord.gift/{code} Was a fake code\n") 
+                nitrotext.close()
+        except:
+            pass
     if pastebinsniping == "on":
-        if 'pastebin' in ctx.content: #while it cant exactly be "sniped" - people still drop stuff in pastebin from time to time that you might not see , depending on whether its a method or sum, still usefull to have imo
+        try:
+            if 'pastebin' in ctx.content: #while it cant exactly be "sniped" - people still drop stuff in pastebin from time to time that you might not see , depending on whether its a method or sum, still usefull to have imo
         
-            code = re.search("pastebin.com/(.*)", ctx.content).group(1) 
-            if len(code) == 8:
-                pasteresult = requests.get(f"https://pastebin.com/raw/{code}")
-                if pasteresult.status_code != 404: 
-                    with open(f'Pastebin/{code}.txt', 'w+') as pastebinsave:
-                        pastebinsave.write(f"[+] Results from pastebin.com/{code}:\n\n{pasteresult.text}")
-                        pastebinsave.close()
+                code = re.search("pastebin.com/(.*)", ctx.content).group(1) 
+                if len(code) == 8:
+                    pasteresult = requests.get(f"https://pastebin.com/raw/{code}")
+                    if pasteresult.status_code != 404: 
+                        with open(f'Pastebin/{code}.txt', 'w+') as pastebinsave:
+                            pastebinsave.write(f"[+] Results from pastebin.com/{code}:\n\n{pasteresult.text}")
+                            pastebinsave.close()
+        except:
+            pass
 
 
 
 
     if giveawaysniping == "on":
-        if 'giveaway' in str(ctx.content).lower():
-            if ctx.author.id == 294882584201003009  or ctx.author.id == 673918978178940951 or ctx.author.id == 716967712844414996 or ctx.author.id == 582537632991543307 or ctx.author.id == 450017151323996173 or ctx.author.id == 574812330760863744:
-                await asyncio.sleep(8) # so yall dont get accused of sniping giveaways but still enter all - min gw time for the big giveaway bot is 10 seconds
-                await ctx.add_reaction("🎉")
-                gwlog = open("Log/gwlog.txt","a") 
-                try:
-                    gwlog.write(f"[!] Giveaway Entered! // Server: {ctx.guild.name} // Channel: {ctx.channel.name} // Bot: {ctx.author.name}#{ctx.author.discriminator} \n")
-                except:
-                    gwlog.write(f"[+] Giveaway Entered : Server/Channel Not writable because of characters used :| //  Bot: {ctx.author.name}#{ctx.author.discriminator} \n[+] Message: {ctx.content}\n")
+        try:
+            if 'giveaway' in str(ctx.content).lower():
+                if ctx.author.id == 294882584201003009  or ctx.author.id == 673918978178940951 or ctx.author.id == 716967712844414996 or ctx.author.id == 582537632991543307 or ctx.author.id == 450017151323996173 or ctx.author.id == 574812330760863744:
+                    await asyncio.sleep(8) # so yall dont get accused of sniping giveaways but still enter all - min gw time for the big giveaway bot is 10 seconds
+                    await ctx.add_reaction("🎉")
+                    gwlog = open("Log/gwlog.txt","a") 
+                    try:
+                        gwlog.write(f"[!] Giveaway Entered! // Server: {ctx.guild.name} // Channel: {ctx.channel.name} // Bot: {ctx.author.name}#{ctx.author.discriminator} \n")
+                    except:
+                        gwlog.write(f"[+] Giveaway Entered : Server/Channel Not writable because of characters used :| //  Bot: {ctx.author.name}#{ctx.author.discriminator} \n[+] Message: {ctx.content}\n")
                 
-
+        except:
+            pass
 
         if f'<@{scalic.user.id}>' in str(ctx.content): #
             if ctx.author.id == 294882584201003009 or ctx.author.id == 673918978178940951 or ctx.author.id == 716967712844414996 or ctx.author.id == 582537632991543307 or ctx.author.id == 450017151323996173 or ctx.author.id == 574812330760863744:
@@ -1265,16 +1356,19 @@ async def on_message(ctx):
                         gwlog.write(f"[+] Giveaway Won: Server/Channel Not writable because of characters used :| //  Bot: {ctx.author.name}#{ctx.author.discriminator}\n[+] Message: {ctx.content}\n")
 
     if privnotesniping == "on":
-        if 'privnote' in ctx.content: 
+        try:
+            if 'privnote' in ctx.content: 
         
-            code = re.search("privnote.com/(.*)", ctx.content).group(1) 
-            try:
-                privnotesnipe = pn.read_note(f"https://privnote.com/{code}")
-                with open(f'Privnote/{code}.txt', 'w+') as pastebinsave:
-                    pastebinsave.write(f"[+] Results from privnote.com/{code}:\n\n{privnotesnipe}")
-                    pastebinsave.close()
-            except:
-                pass
+                code = re.search("privnote.com/(.*)", ctx.content).group(1) 
+                try:
+                    privnotesnipe = pn.read_note(f"https://privnote.com/{code}")
+                    with open(f'Privnote/{code}.txt', 'w+') as pastebinsave:
+                        pastebinsave.write(f"[+] Results from privnote.com/{code}:\n\n{privnotesnipe}")
+                        pastebinsave.close()
+                except:
+                    pass
+        except:
+            pass
 
     if ctx.author.id == scalic.user.id:
         messagessent += 1
@@ -1289,7 +1383,26 @@ async def on_message(ctx):
                 # print(e)
                 pass
     
-
+        if talkingcuteyems == "on":
+            try:
+                cutiemsg = ctx.content.replace("yes","yems").replace("yeah","yemmers")
+                cutiemsg = cutiemsg.replace("block","plock")
+                cutiemsg = cutiemsg.replace("fuck","pluc")
+                cutiemsg = cutiemsg.replace("cutie","cootie").replace("cute","coot").replace("cutey","cooty")
+                cutiemsg = cutiemsg.replace("what","wa")
+                cutiemsg = cutiemsg.replace("leave","leaf")
+                cutiemsg = cutiemsg.replace("offence","of fence")
+                cutiemsg = cutiemsg.replace("pls","plims").replace("please","plims")
+                cutiemsg = cutiemsg.replace("bro","bryo") 
+                cutiemsg = cutiemsg.replace("give","gib") 
+                cutiemsg = cutiemsg.replace("mine","mien") 
+                cutiemsg = cutiemsg.replace("here","heer") 
+                cutiemsg = cutiemsg.replace("alone","alon") 
+                cutiemsg = cutiemsg.replace("idiot","idot sammich") 
+                cutiemsg = cutiemsg.replace("i am","am") 
+                await ctx.edit(content=cutiemsg)
+            except:
+                pass
 
         if statusofediting == "on":
             try:
@@ -1320,7 +1433,6 @@ async def on_message_delete(ctx):
                         await ctx.channel.send(f"**Message logged by {ctx.author.mention} : ** \n{ctx.content}")
                     except:
                         pass
-    await scalic.process_commands(ctx)
 
 @scalic.event
 async def on_message_edit(before,after):
@@ -1337,7 +1449,6 @@ async def on_message_edit(before,after):
                         pass
     
 
-    await scalic.process_commands(after)
 @scalic.command(aliases=["shorten","urlshorten"])
 async def tinyurl(ctx,link=None):
     randcolor = random.randint(0x000000, 0xFFFFFF)
@@ -1849,7 +1960,12 @@ async def iphonex(ctx,  memb : discord.Member=None):
     embed.set_image(url=phonephoto)
     await ctx.message.edit(content="",embed=embed)
 
-    
+@scalic.command(aliases=["scalicselfbot","scalic","link","website"])
+async def download(ctx):
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(color=randcolor)
+    embed.set_image(url="https://i.imgur.com/Ne7zrIr.png")
+    await ctx.message.edit(content="https://github.com/scalic Scalic selfbot - Scalic selfbot was made as a fun project.\nScalic is free and has creative commands - why wouldn't you try it out\nIt has a wide range of commands, uses fun apis and is simple to setup - no api keys needed",embed=embed)  
 
 @scalic.command(aliases=["gender"])
 async def name(ctx,*,namesupplied=None):
