@@ -1,4 +1,9 @@
+from __future__ import unicode_literals
+
 import os
+
+
+
 try:
     import sys
 except:
@@ -1124,7 +1129,7 @@ def ssspam(webhook):
 
         randcolor = random.randint(0x000000, 0xFFFFFF)
         data = {
-          "content": "@everyone **Nuked via scalic** Body-ody-ody-ody-ody-ody-ody-ody Body-yada-yada-yada-yada-yada-yada-yada-yada weeee @@@@@@@@@@@@@@@ sksksksk\n⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️",
+          "content": "@everyone **Nuked via scalic** Body-ody-ody-ody-ody-ody-ody-ody Body-yada-yada-yada-yada-yada-yada-yada-yada weeee @@@@@@@@@@@@@@@ sksksksk\n:chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains::chains:",
           "embeds": [
             {
               "title": "This server has been nuked via scalic nuker",
