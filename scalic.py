@@ -188,7 +188,7 @@ delaybetweennicknamecycle = setup[14].replace('"',"").replace("NICKNAMECYCLEDELA
 nicknamedata = setup[15].replace('"',"").replace("NICKNAMECYCLE=","")
 talkingcuteyems = setup[16].replace('"',"").replace("TALKCUTE=","")
 isafk = setup[17].replace('"',"").replace("AFK=","")
-messagetosendwhenafk = setup[18].replace('"',"").replace("ASKMSG=","")
+messagetosendwhenafk = setup[18].replace('"',"").replace("AFKMSG=","")
 notifsyems = setup[19].replace('"',"").replace("NOTIFICATIONS-ON-PING=","")
 
 #might switch this to an env file but I've done stuff like that before and like 9% of people knew how to load it - this is more foolproof
