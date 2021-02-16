@@ -114,7 +114,7 @@ except:
     os.system("pip install pillow")
     from PIL import Image
 
-
+from discord.ext import commands
 
 
 characters = string.ascii_letters + string.digits
