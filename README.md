@@ -8,4 +8,4 @@ It has many commands.
 
 Enjoy
 
-(It's no where near finished, report any bugs to me, and I know it doesn't have a help cmd - making it once done)
+(Report any bugs to me - I'm sure they'll be a few - bugs should show in error log!)
