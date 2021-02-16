@@ -117,6 +117,7 @@ except:
 from discord.ext import commands
 
 
+
 characters = string.ascii_letters + string.digits
 
 os.system("cls")
@@ -738,15 +739,7 @@ Type `{prefix.strip()}help [category]` for information on its commands
     
 """   
 
-    else:
-        description =f"""
-{description} is an invalid category, pick one of the following:
-Categories : `System` , `Utility` , `Emoji` , `Moderation` , `Snipe` , `Nuke` , `Fun` , `Text`.
 
-Type `{prefix.strip()}help [category]` for information on its commands
-
-
-"""
 
     embed=discord.Embed(title=f"Scalic Selfbot", description=description, color=0x36393f)
     await ctx.send(embed=embed)
