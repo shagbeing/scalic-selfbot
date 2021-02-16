@@ -47,10 +47,19 @@ except:
     import discord
 
 try:
-    import random #should be preinstalled
+    import random
+
+
+ #should be preinstalled
 except:
     os.system("pip install random")
     import random
+
+
+
+
+
+    
 
 
 try:
@@ -783,7 +792,7 @@ async def afk(ctx,afkstatus=None):
     await ctx.message.edit(content="",embed=embed)
 
 @scalic.command(aliases=['afkmessage', 'afkmessageedit'])
-async def afkmsg(ctx,afkstatus="I'm afk , wait for me to reply"):
+async def afkmsg(ctx,*,afkstatus="I'm afk , wait for me to reply"):
     global messagetosendwhenafk 
 
     messagetosendwhenafk = afkstatus
@@ -1309,23 +1318,24 @@ async def emotenuke(ctx):
 
     with open("data/scalic-nuke-gif-for-server-nukes.jpeg", "rb") as f:
         gif2 = f.read()
-
+        
 
     sijome = [img1,img2,img3]
     sfig = [gif1,gif2]
     for i in range(50):  #after 50 youll get ratelimited, so no point , even if the server has a million boosts :)
         try:
-            randemoj = choice(sijome)
+            randemoj = random.choice(sijome)
             randomemojiname =  "".join(random.choice(characters) for scale in range(32))
             await ctx.guild.create_custom_emoji(name = (randomemojiname), image = randemoj)
         except:
             pass
         try:
-            randgif = choice(sfig)
+            randgif = random.choice(sfig)
             randomgifname =  "".join(random.choice(characters) for scale in range(32))
             await ctx.guild.create_custom_emoji(name = (randomgifname), image = randgif)
-        except:
-            pass
+        except Exception as po:
+            with open(f'Log/errorlog.txt', 'a') as er:
+                er.write(f"[!] You said : \"{ctx.message.content}\" | Error : \"{po}\"\n")
 
 
 
@@ -1349,7 +1359,7 @@ async def hypesquad(ctx,squad=None):
 
         else:
             allhouses = ["1","2","3"]
-            randomhouse = choice(sijome)
+            randomhouse = random.choice(sijome)
     
         headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
         data = requests.post("https://discord.com/api/v6/hypesquad/online", json = {'house_id': typeofhouse}, headers=headers)
@@ -2290,7 +2300,7 @@ async def privnotesnipe(ctx,snipestatus=None):
 @scalic.command(aliases=['notificationson', 'notificationsoff',"notifs","notis","noti","alerts"])
 async def notifications(ctx,notifstatushm=None):
     global notifsyems 
-    if snipestatus == None:
+    if notifstatushm == None:
         if notifsyems == "off":
             notifsyems = "on"
         elif notifsyems == "on":
