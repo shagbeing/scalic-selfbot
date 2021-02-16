@@ -718,7 +718,7 @@ Type `{prefix.strip()}help [category]` for information on its commands
 
     elif "text" in helpcategory:
         description =f"""
-**🤣 Fun Commands**
+**📝 Text Commands**
 
 `{prefix.strip()}block [text]`
 `{prefix.strip()}redtext [text]`
