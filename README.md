@@ -30,6 +30,8 @@ Command | Aliases | Description | Arguments | Example
 `logout` | `logoff`, `close`| Turns bot off - commands will stop working after this | None | `!logout`
 
 
+The following categories work but the readme file has not been made for them - please wait patiently!
+
 ## ⚙️ Utility Commands
 
 Command | Aliases | Description | Arguments | Example
