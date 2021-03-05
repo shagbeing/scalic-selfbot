@@ -205,6 +205,7 @@ talkingcuteyems = setup[16].replace('"',"").replace("TALKCUTE=","")
 isafk = setup[17].replace('"',"").replace("AFK=","")
 messagetosendwhenafk = setup[18].replace('"',"").replace("AFKMSG=","")
 notifsyems = setup[19].replace('"',"").replace("NOTIFICATIONS-ON-PING=","")
+#looking back idk what i was thinking doing this. I know and want to switch to a json config but it's kinda complicated especially with how the code relies on certain bits so errr yes
 
 #might switch this to an env file but I've done stuff like that before and like 9% of people knew how to load it - this is more foolproof
 
