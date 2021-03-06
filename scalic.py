@@ -906,6 +906,7 @@ async def nicknamecycledelay(ctx,newdelay="5"):
 async def cycledelay(ctx,newdelay="5"):
     global delaybetweencycle
     delaybetweencycle = int(newdelay)
+    randcolor = random.randint(0x000000, 0xFFFFFF)
     embed=discord.Embed(title="Scalic Selfbot - Cycle Delay", description=f"Delay is now : `{delaybetweencycle} seconds", color=randcolor)
     embed.set_thumbnail(url="https://media.giphy.com/media/YpGPs0rAJQC1lngD0R/giphy.gif")
     embed.set_footer(text="https://github.com/scalic/scalic-selfbot")
