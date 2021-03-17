@@ -1353,15 +1353,15 @@ async def hypesquad(ctx,squad=None):
 
 
         if squad.lower() == "bravery" or squad == "1":
-            typeofhouse = "1"
+            typeofhouse = 1
         elif squad.lower() == "brilliance" or squad == "2":
-            typeofhouse = "2"
+            typeofhouse = 2
         elif squad.lower() == "balance" or squad == "3":
-            typeofhouse = "3"
+            typeofhouse = 3
 
         else:
-            allhouses = ["1","2","3"]
-            randomhouse = random.choice(sijome)
+            allhouses = [1,2,3]
+            typeofhouse = random.choice(allhouses)
     
         headers = {'Authorization': token.strip(), 'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/81.0.4044.138 Safari/537.36', 'Accept': '*/*',}
         data = requests.post("https://discord.com/api/v6/hypesquad/online", json = {'house_id': typeofhouse}, headers=headers)
