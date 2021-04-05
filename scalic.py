@@ -4,11 +4,8 @@ import os
 
 
 
-try:
-    import sys
-except:
-    os.system("pip install sys")
-    import sys
+import sys
+
 
 import time
 try:
@@ -46,14 +43,11 @@ except:
     os.system("pip install discord")
     import discord
 
-try:
-    import random
+
+import random
 
 
- #should be preinstalled
-except:
-    os.system("pip install random")
-    import random
+
 
 
 
